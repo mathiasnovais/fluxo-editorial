@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fluxo Editorial 2027 · Rede Alfa CEM</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#F5F5F7;color:#1D1D1F;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  a{color:#1878D4;text-decoration:none;cursor:pointer}
+  a:hover{color:#0F5FAA}
+  button{font:inherit;cursor:pointer}
+
+  .app{display:flex;min-height:100vh;background:#F5F5F7}
+
+  /* ── Sidebar ── */
+  aside{width:248px;flex:none;background:#fff;border-right:1px solid rgba(0,0,0,.07);padding:26px 18px;display:flex;flex-direction:column;gap:28px;position:sticky;top:0;height:100vh}
+  aside img.logo{width:172px;height:auto;display:block;margin-left:6px}
+  nav{display:flex;flex-direction:column;gap:2px}
+  .nav-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:10px;font-size:14px;letter-spacing:-.01em;cursor:pointer;user-select:none;color:#3C3C43;background:transparent;font-weight:400;border:0;width:100%;text-align:left}
+  .nav-item:hover{background:#F5F5F7}
+  .nav-item.on{color:#0F5FAA;background:#EFF5FC;font-weight:600}
+  .nav-item .dot{width:7px;height:7px;border-radius:50%;background:#D1D1D6;flex:none}
+  .nav-item.on .dot{background:#1878D4}
+  .side-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+  .meta-card{background:#F5F5F7;border-radius:14px;padding:14px 15px}
+  .meta-card .cap{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#8E8E93}
+  .meta-card .val{font-size:15px;font-weight:600;letter-spacing:-.015em;margin-top:5px;line-height:1.3}
+  .meta-card .sub{font-size:12px;color:#6E6E73;margin-top:6px}
+  .sync{font-size:11px;color:#8E8E93;line-height:1.5;padding:0 4px;display:flex;flex-direction:column;gap:3px}
+  .sync .pulse{display:inline-flex;align-items:center;gap:6px}
+  .sync .pulse i{width:6px;height:6px;border-radius:50%;background:#34C759;flex:none}
+  .sync.err .pulse i{background:#AF2018}
+  .sync.load .pulse i{background:#FF9F0A;animation:blink 1s infinite}
+  @keyframes blink{50%{opacity:.25}}
+  .sync button{border:0;background:none;color:#1878D4;font-size:11px;padding:0;text-align:left}
+
+  /* ── Main ── */
+  main{flex:1;min-width:1140px;padding:30px 38px 46px;display:flex;flex-direction:column;gap:22px}
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#8E8E93;font-weight:600}
+  h1{margin:6px 0 0;font-size:32px;line-height:1.1;letter-spacing:-.028em;font-weight:600}
+  .lead{margin:6px 0 0;font-size:14px;color:#6E6E73;letter-spacing:-.01em}
+  .filtros{display:flex;gap:8px;align-items:center}
+  .chip{border:1px solid rgba(0,0,0,.1);background:#fff;color:#3C3C43;font-size:13px;font-weight:500;letter-spacing:-.01em;padding:8px 15px;border-radius:980px}
+  .chip:hover{border-color:#1878D4;color:#1878D4}
+  .chip.on{background:#FBEFEE;border-color:rgba(175,32,24,.28);color:#AF2018}
+  select.chip{appearance:none;padding-right:30px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238E8E93' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center}
+
+  .card{background:#fff;border-radius:20px;box-shadow:0 1px 2px rgba(0,0,0,.05),0 6px 20px rgba(0,0,0,.04)}
+  .card-t{font-size:17px;font-weight:600;letter-spacing:-.02em}
+  .card-s{font-size:13px;color:#6E6E73;margin-top:3px}
+
+  /* KPIs */
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .kpi{background:#fff;border-radius:18px;padding:18px 20px 16px;box-shadow:0 1px 2px rgba(0,0,0,.05),0 6px 20px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px}
+  .kpi .lbl{display:flex;align-items:center;gap:8px;font-size:13px;color:#6E6E73;letter-spacing:-.01em}
+  .kpi .lbl i{width:8px;height:8px;border-radius:50%;flex:none}
+  .kpi .num{font-size:40px;font-weight:600;letter-spacing:-.04em;line-height:1}
+  .kpi .bar{height:5px;border-radius:3px;background:#EDEDEF;overflow:hidden}
+  .kpi .bar>i{display:block;height:100%;border-radius:3px}
+  .kpi .hint{font-size:12px;color:#8E8E93;letter-spacing:-.005em}
+
+  .grid2{display:grid;gap:16px;align-items:start}
+
+  /* Segmentos */
+  .seg-head{padding:20px 24px 14px;display:flex;align-items:baseline;justify-content:space-between}
+  .seg-body{padding:0 24px 20px;display:flex;flex-direction:column}
+  .seg-row{display:grid;grid-template-columns:150px minmax(120px,1fr) 92px 54px;gap:16px;align-items:center;padding:11px 0;border-top:1px solid rgba(0,0,0,.06)}
+  .seg-row .nm{font-size:14px;font-weight:500;letter-spacing:-.012em}
+  .seg-row .nm span{display:block;font-size:12px;color:#8E8E93;font-weight:400}
+  .seg-row .track{height:8px;border-radius:5px;background:#EDEDEF;display:flex;overflow:hidden}
+  .seg-row .det{font-size:12px;color:#6E6E73;letter-spacing:-.005em}
+  .seg-row .pct{font-size:15px;font-weight:600;letter-spacing:-.02em;text-align:right}
+
+  /* Trilhas / gargalos */
+  .pad{padding:20px 22px}
+  .trilha{border-radius:16px;padding:15px 16px}
+  .trilha .top{display:flex;align-items:baseline;justify-content:space-between}
+  .trilha .nm{font-size:14px;font-weight:600;letter-spacing:-.015em}
+  .trilha .jn{font-size:12px;color:#6E6E73}
+  .trilha .n{font-size:30px;font-weight:600;letter-spacing:-.035em;line-height:1}
+  .trilha .bar{height:6px;border-radius:4px;background:rgba(0,0,0,.07);margin-top:11px;overflow:hidden}
+  .trilha .bar>i{display:block;height:100%}
+  .trilha .nota{font-size:12px;color:#6E6E73;margin-top:8px;line-height:1.4}
+  .garg{display:flex;gap:13px;align-items:center;padding:13px 0;border-top:1px solid rgba(0,0,0,.06)}
+  .garg .tag{width:34px;height:34px;flex:none;border-radius:10px;background:#F5F5F7;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#6E6E73;letter-spacing:-.01em}
+  .garg .tt{font-size:14px;font-weight:500;letter-spacing:-.012em}
+  .garg .ss{font-size:12px;color:#8E8E93;line-height:1.35}
+  .garg .n{margin-left:auto;font-size:19px;font-weight:600;letter-spacing:-.025em}
+
+  /* Materiais */
+  .cols{display:grid;grid-template-columns:minmax(96px,1fr) minmax(150px,1.4fr) minmax(104px,1fr) minmax(96px,.9fr) 250px minmax(128px,1fr);gap:16px}
+  .mat-head{padding:20px 24px 16px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .mat-cols{padding:10px 24px;background:#FAFAFB;border-top:1px solid rgba(0,0,0,.06);border-bottom:1px solid rgba(0,0,0,.06);font-size:12px;color:#8E8E93;letter-spacing:-.005em}
+  .mat-row{align-items:center;padding:13px 24px;border-bottom:1px solid rgba(0,0,0,.05);font-size:14px;letter-spacing:-.01em}
+  .mat-row:hover{background:#FAFAFB}
+  .mat-row .ano{font-weight:500}
+  .mat-row .livro,.mat-row .materia{color:#3C3C43}
+  .mat-row .livro{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pill{font-size:12px;font-weight:500;padding:3px 10px;border-radius:980px;background:#F0F2F5;color:#3C3C43}
+  .pill.re{background:#FBEFEE;color:#AF2018}
+  .etapas{display:flex;align-items:center;gap:5px}
+  .etapas i{width:30px;height:6px;border-radius:3px;display:block}
+  .etapas span{font-size:12px;color:#8E8E93;margin-left:6px}
+  .sit{display:flex;align-items:center;gap:7px;font-size:13px;color:#3C3C43}
+  .sit i{width:7px;height:7px;border-radius:50%;flex:none}
+  .busca{display:flex;align-items:center;gap:7px;background:#F5F5F7;border-radius:980px;padding:8px 14px;min-width:186px}
+  .busca input{border:0;background:none;outline:none;font:inherit;font-size:13px;width:100%;color:#1D1D1F}
+  .busca input::placeholder{color:#8E8E93}
+  .btn-p{border:0;background:#1878D4;color:#fff;font-size:13px;font-weight:500;letter-spacing:-.01em;padding:9px 16px;border-radius:980px}
+  .btn-p:hover{background:#0F5FAA}
+  .pager{padding:14px 24px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:#8E8E93}
+  .pager span.nav{display:flex;gap:14px}
+  .pager button{border:0;background:none;color:#1878D4;font-size:13px}
+  .pager button:disabled{color:#C7C7CC;cursor:default}
+
+  .vazio{padding:40px 24px;text-align:center;color:#8E8E93;font-size:14px}
+  footer{display:flex;align-items:center;gap:14px;font-size:12px;color:#8E8E93;letter-spacing:-.005em}
+  footer img{width:34px;height:auto;opacity:.75}
+  .banner{background:#FBEFEE;border:1px solid rgba(175,32,24,.22);color:#AF2018;border-radius:14px;padding:14px 18px;font-size:13px;line-height:1.5}
+  .banner code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:rgba(175,32,24,.08);padding:1px 5px;border-radius:4px}
+  .skel{background:linear-gradient(90deg,#EDEDEF 25%,#F5F5F7 50%,#EDEDEF 75%);background-size:200% 100%;animation:sk 1.3s infinite;border-radius:6px;color:transparent}
+  @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+/* ============================================================
+   FLUXO EDITORIAL 2027 · Rede Alfa CEM
+   Os dados vêm do webhook do n8n, que lê a planilha
+   "Fluxo_Editorial_2027_Rede_Alfa_CEM" no Google Drive.
+   Nada aqui é hardcoded — esta tela só desenha o JSON recebido.
+   ============================================================ */
+const CONFIG = {
+  // Caminho do webhook de dados no n8n (mesmo host que serve esta página).
+  ENDPOINT: '/webhook/fluxo-editorial-dados',
+  // Recarrega sozinho a cada N ms. A planilha mudou -> a tela muda.
+  REFRESH_MS: 60000,
+  // Linhas por página na tabela de materiais.
+  POR_PAGINA: 10
+};
+
+const BLUE = '#1878D4', DEEP = '#0F5FAA', RED = '#AF2018';
+const GREEN = '#34C759', AMBER = '#FF9F0A', GREY = '#8E8E93', LGREY = '#C7C7CC';
+
+const LOGO_PRINCIPAL = '__LOGO_PRINCIPAL__';
+const LOGO_RODAPE = '__LOGO_RODAPE__';
+
+const VIEWS = [
+  ['Visão geral', 'visao'], ['Materiais', 'materiais'], ['Cronograma', 'cronograma'],
+  ['Segmentos', 'segmentos'], ['Responsáveis', 'responsaveis'], ['Relatórios', 'relatorios']
+];
+
+const state = {
+  view: 'visao',
+  dados: null,
+  status: 'load',      // load | ok | erro
+  erro: '',
+  atualizadoEm: null,
+  busca: '',
+  filtroSegmento: '',
+  filtroTrilha: '',
+  somenteRisco: false,
+  pagina: 0
+};
+
+/* ── util ── */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const nfmt = n => Number(n || 0).toLocaleString('pt-BR');
+const pctStr = n => Math.round(Number(n) || 0) + '%';
+
+function diasAte(iso) {
+  if (!iso) return null;
+  const alvo = new Date(iso + 'T00:00:00');
+  if (isNaN(alvo)) return null;
+  const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+  return Math.round((alvo - hoje) / 86400000);
+}
+function dataLonga(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso + 'T00:00:00');
+  if (isNaN(d)) return iso;
+  return d.toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+function haQuanto(ts) {
+  if (!ts) return '';
+  const seg = Math.max(0, Math.round((Date.now() - new Date(ts)) / 1000));
+  if (seg < 60) return 'há ' + seg + 's';
+  if (seg < 3600) return 'há ' + Math.round(seg / 60) + ' min';
+  return 'há ' + Math.round(seg / 3600) + 'h';
+}
+
+/* ── camada de dados ── */
+async function carregar(manual) {
+  if (manual) { state.status = 'load'; render(); }
+  try {
+    const r = await fetch(CONFIG.ENDPOINT, { cache: 'no-store', headers: { Accept: 'application/json' } });
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + r.statusText);
+    const json = await r.json();
+    const d = Array.isArray(json) ? json[0] : json;
+    if (!d || !Array.isArray(d.materiais)) throw new Error('Resposta sem o campo "materiais".');
+    state.dados = d;
+    state.atualizadoEm = d.atualizadoEm || new Date().toISOString();
+    state.status = 'ok';
+    state.erro = '';
+  } catch (e) {
+    state.status = 'erro';
+    state.erro = e.message || String(e);
+  }
+  render();
+}
+
+/* ── derivações locais (filtro / busca / paginação) ── */
+function materiaisFiltrados() {
+  const d = state.dados;
+  if (!d) return [];
+  const q = state.busca.trim().toLowerCase();
+  return d.materiais.filter(m => {
+    if (state.filtroSegmento && m.segmento !== state.filtroSegmento) return false;
+    if (state.filtroTrilha && m.trilha !== state.filtroTrilha) return false;
+    if (state.somenteRisco && !m.emRisco) return false;
+    if (q) {
+      const alvo = [m.ano, m.livro, m.materia, m.segmento, m.situacao].join(' ').toLowerCase();
+      if (!alvo.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function exportarCsv() {
+  const linhas = materiaisFiltrados();
+  const cab = ['Segmento', 'Ano/Série', 'Livro', 'Matéria', 'Trilha', 'Etapas', '% Concluído', 'Situação'];
+  const cel = v => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+  const csv = [cab.map(cel).join(';')].concat(
+    linhas.map(m => [m.segmento, m.ano, m.livro, m.materia, m.trilha, m.etapas, m.pct + '%', m.situacao].map(cel).join(';'))
+  ).join('\r\n');
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'fluxo-editorial-2027.csv';
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ── blocos de render ── */
+function corEtapa(s) { return s === 'C' ? BLUE : s === 'A' ? '#9CC8EE' : '#E5E5EA'; }
+function corSituacao(s) {
+  if (/conclu/i.test(s)) return GREEN;
+  if (/não iniciad|nao iniciad/i.test(s)) return AMBER;
+  return BLUE;
+}
+
+function vSidebar() {
+  const d = state.dados;
+  const dias = d ? diasAte(d.metaFinal) : null;
+  const nav = VIEWS.map(([label, id]) =>
+    `<button class="nav-item${state.view === id ? ' on' : ''}" data-view="${id}"><span class="dot"></span>${esc(label)}</button>`
+  ).join('');
+
+  const rotulo = state.status === 'ok'
+    ? 'Sincronizado ' + haQuanto(state.atualizadoEm)
+    : state.status === 'load' ? 'Consultando planilha…' : 'Falha na sincronização';
+
+  return `<aside>
+    <img class="logo" src="${LOGO_PRINCIPAL}" alt="Alfacem Global Academy">
+    <nav>${nav}</nav>
+    <div class="side-foot">
+      <div class="meta-card">
+        <div class="cap">Meta final</div>
+        <div class="val">Gráfica até<br>${esc(dataLonga(d && d.metaFinal))}</div>
+        <div class="sub">${dias === null ? '—' : dias >= 0 ? 'faltam ' + dias + ' dias' : Math.abs(dias) + ' dias em atraso'}</div>
+      </div>
+      <div class="sync ${state.status === 'ok' ? '' : state.status}">
+        <span class="pulse"><i></i>${esc(rotulo)}</span>
+        <span>Fonte: planilha Fluxo Editorial 2027</span>
+        <button data-act="recarregar">Atualizar agora</button>
+      </div>
+    </div>
+  </aside>`;
+}
+
+function vHeader() {
+  const d = state.dados;
+  const heads = {
+    visao: ['O que está em risco', total => `${nfmt(total)} materiais em revisão e reescrita · atualizado ${haQuanto(state.atualizadoEm)}`],
+    materiais: ['Materiais', total => `todos os ${nfmt(total)} materiais do ciclo, ordenados por risco`],
+    cronograma: ['Cronograma', () => 'as duas trilhas do fluxo e os gargalos de cada etapa'],
+    segmentos: ['Segmentos', () => 'avanço de cada segmento nas 6 etapas do fluxo'],
+    responsaveis: ['Responsáveis', () => 'quem responde por cada etapa em cada segmento'],
+    relatorios: ['Relatórios', () => 'exportações para a direção e para a gráfica']
+  };
+  const [titulo, subFn] = heads[state.view];
+  const total = d ? d.materiais.length : 0;
+
+  const segs = d ? d.segmentos.map(s => s.nome) : [];
+  const trilhas = d ? d.trilhas.map(t => t.nome) : [];
+  const opt = (v, atual, rotuloVazio) =>
+    `<option value=""${atual === '' ? ' selected' : ''}>${esc(rotuloVazio)}</option>` +
+    v.map(x => `<option value="${esc(x)}"${atual === x ? ' selected' : ''}>${esc(x)}</option>`).join('');
+
+  return `<header>
+    <div>
+      <div class="eyebrow">Fluxo Editorial 2027</div>
+      <h1>${esc(titulo)}</h1>
+      <p class="lead">${esc(subFn(total))}</p>
+    </div>
+    <div class="filtros">
+      <select class="chip${state.filtroSegmento ? ' on' : ''}" data-f="segmento">${opt(segs, state.filtroSegmento, 'Todos os segmentos')}</select>
+      <select class="chip${state.filtroTrilha ? ' on' : ''}" data-f="trilha">${opt(trilhas, state.filtroTrilha, 'Trilha: todas')}</select>
+      <button class="chip${state.somenteRisco ? ' on' : ''}" data-act="risco">Somente em risco</button>
+    </div>
+  </header>`;
+}
+
+function vKpis() {
+  const d = state.dados, k = d.kpis, t = Math.max(1, k.total);
+  const cards = [
+    { label: 'Total', value: k.total, hint: 'materiais no ciclo 2027', color: LGREY, w: 100, vc: '#1D1D1F' },
+    { label: 'Não iniciado', value: k.naoIniciado, hint: Math.round(k.naoIniciado / t * 100) + '% da rede', color: GREY, w: k.naoIniciado / t * 100, vc: '#1D1D1F' },
+    { label: 'Em andamento', value: k.emAndamento, hint: Math.round(k.emAndamento / t * 100) + '% da rede', color: BLUE, w: k.emAndamento / t * 100, vc: '#1D1D1F' },
+    { label: 'Concluído', value: k.concluido, hint: k.concluido ? Math.round(k.concluido / t * 100) + '% liberado' : 'nenhum liberado ainda', color: GREEN, w: Math.max(1, k.concluido / t * 100), vc: '#1D1D1F' },
+    { label: 'Reescrita crítica', value: k.reescritaCritica, hint: 'janela de 8 semanas', color: RED, w: k.reescritaCritica / t * 100, vc: RED }
+  ];
+  return `<section class="kpis">` + cards.map(c => `<div class="kpi">
+      <div class="lbl"><i style="background:${c.color}"></i>${esc(c.label)}</div>
+      <div class="num" style="color:${c.vc}">${nfmt(c.value)}</div>
+      <div class="bar"><i style="background:${c.color};width:${Math.min(100, c.w)}%"></i></div>
+      <div class="hint">${esc(c.hint)}</div>
+    </div>`).join('') + `</section>`;
+}
+
+function vSegmentos() {
+  const linhas = state.dados.segmentos.map(s => `<div class="seg-row">
+      <div class="nm">${esc(s.nome)}<span>${nfmt(s.total)} materiais</span></div>
+      <div class="track">
+        <i style="height:100%;background:${BLUE};width:${s.pctConcluido}%"></i>
+        <i style="height:100%;background:#9CC8EE;width:${s.pctAndamento}%"></i>
+      </div>
+      <div class="det">${esc(s.detalhe)}</div>
+      <div class="pct" style="color:${s.pctConcluido === 0 ? GREY : DEEP}">${pctStr(s.pctConcluido)}</div>
+    </div>`).join('');
+
+  return `<div class="card">
+    <div class="seg-head">
+      <div><div class="card-t">Progresso por segmento</div><div class="card-s">avanço médio nas 6 etapas do fluxo</div></div>
+      <a data-act="ir-materiais">Ver materiais</a>
+    </div>
+    <div class="seg-body">${linhas || '<div class="vazio">Nenhum segmento retornado pela planilha.</div>'}</div>
+  </div>`;
+}
+
+function vTrilhas() {
+  const d = state.dados;
+  const tr = d.trilhas.map(t => {
+    const cor = /reescrita/i.test(t.nome) ? RED : DEEP;
+    const bg = /reescrita/i.test(t.nome) ? '#FBF0EF' : '#F1F6FC';
+    return `<div class="trilha" style="background:${bg}">
+      <div class="top"><span class="nm" style="color:${cor}">${esc(t.nome)}</span><span class="jn">${esc(t.janela || '')}</span></div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-top:8px">
+        <span class="n" style="color:${cor}">${nfmt(t.n)}</span>
+        <span style="font-size:12px;color:#6E6E73">materiais · ${esc(t.duracao || '')}</span>
+      </div>
+      <div class="bar"><i style="background:${cor};width:${Math.min(100, t.pct)}%"></i></div>
+      <div class="nota">${esc(t.nota || '')}</div>
+    </div>`;
+  }).join('');
+
+  const gg = d.gargalos.map(g => {
+    const cor = g.nivel === 'critico' ? RED : g.nivel === 'atencao' ? AMBER : GREY;
+    return `<div class="garg">
+      <div class="tag">${esc(g.etapa)}</div>
+      <div style="min-width:0"><div class="tt">${esc(g.titulo)}</div><div class="ss">${esc(g.sub)}</div></div>
+      <div class="n" style="color:${cor}">${nfmt(g.n)}</div>
+    </div>`;
+  }).join('');
+
+  return `<div style="display:flex;flex-direction:column;gap:16px">
+    <div class="card pad">
+      <div class="card-t">Duas trilhas até a gráfica</div>
+      <div class="card-s">prazos distintos por tipo de ação</div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">${tr}</div>
+    </div>
+    <div class="card pad">
+      <div class="card-t">Gargalos</div>
+      <div style="display:flex;flex-direction:column;margin-top:6px">${gg || '<div class="vazio">Sem gargalos apurados.</div>'}</div>
+    </div>
+  </div>`;
+}
+
+function vMateriais() {
+  const todos = materiaisFiltrados();
+  const paginas = Math.max(1, Math.ceil(todos.length / CONFIG.POR_PAGINA));
+  if (state.pagina >= paginas) state.pagina = paginas - 1;
+  const ini = state.pagina * CONFIG.POR_PAGINA;
+  const pagina = todos.slice(ini, ini + CONFIG.POR_PAGINA);
+
+  const linhas = pagina.map(m => {
+    const etapas = String(m.etapas || '------').padEnd(6, '-').slice(0, 6);
+    return `<div class="mat-row cols">
+      <div class="ano">${esc(m.ano)}</div>
+      <div class="livro" title="${esc(m.livro)}">${esc(m.livro)}</div>
+      <div class="materia">${esc(m.materia)}</div>
+      <div><span class="pill${/reescrita/i.test(m.trilha) ? ' re' : ''}">${esc(m.trilha)}</span></div>
+      <div class="etapas">${etapas.split('').map(s => `<i style="background:${corEtapa(s)}"></i>`).join('')}<span>${pctStr(m.pct)}</span></div>
+      <div class="sit"><i style="background:${corSituacao(m.situacao)}"></i>${esc(m.situacao)}</div>
+    </div>`;
+  }).join('');
+
+  return `<section class="card" id="materiais" style="overflow:hidden;scroll-margin-top:20px">
+    <div class="mat-head">
+      <div><div class="card-t">Materiais</div><div class="card-s">ordenados por risco · Ano/Série · Livro · Matéria</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <label class="busca"><input type="search" placeholder="Buscar material" value="${esc(state.busca)}" data-act="busca"></label>
+        <button class="btn-p" data-act="exportar">Exportar</button>
+      </div>
+    </div>
+    <div class="mat-cols cols"><div>Ano/Série</div><div>Livro</div><div>Matéria</div><div>Trilha</div><div>Etapas 1 – 6</div><div>Situação</div></div>
+    ${linhas || '<div class="vazio">Nenhum material corresponde aos filtros.</div>'}
+    <div class="pager">
+      <span>${todos.length ? `Mostrando ${ini + 1}–${ini + pagina.length} de ${nfmt(todos.length)} materiais` : 'Nenhum resultado'}</span>
+      <span class="nav">
+        <button data-act="pag-ant"${state.pagina === 0 ? ' disabled' : ''}>Anterior</button>
+        <button data-act="pag-prox"${state.pagina >= paginas - 1 ? ' disabled' : ''}>Próximo</button>
+      </span>
+    </div>
+  </section>`;
+}
+
+function vEmBreve() {
+  const d = state.dados;
+  const resp = (d.responsaveis || []).map(r =>
+    `<div class="garg">
+       <div class="tag">${esc(r.etapa)}</div>
+       <div style="min-width:0"><div class="tt">${esc(r.nome)}</div><div class="ss">${esc(r.papel || '')}</div></div>
+     </div>`).join('');
+
+  if (state.view === 'responsaveis') {
+    return `<section class="card pad" style="padding:28px 30px">
+      <div class="card-t">Responsáveis por etapa</div>
+      <div style="display:flex;flex-direction:column;margin-top:10px">
+        ${resp || '<div class="vazio">A aba de responsáveis da planilha não retornou linhas.</div>'}
+      </div>
+    </section>`;
+  }
+  return `<section class="card pad" style="padding:28px 30px;display:flex;flex-direction:column;gap:14px">
+    <div class="card-t">Relatórios e exportações</div>
+    <div style="font-size:14px;color:#6E6E73;line-height:1.55;max-width:760px;letter-spacing:-.01em">
+      Relatório executivo para a direção, malote por unidade e pacote de liberação para a gráfica.
+      O botão abaixo exporta em CSV exatamente o recorte que estiver ativo nos filtros.
+    </div>
+    <div><button class="btn-p" data-act="exportar">Exportar CSV do recorte atual</button></div>
+  </section>`;
+}
+
+function vErro() {
+  return `<div class="banner">
+    <strong>Não foi possível ler a planilha.</strong><br>
+    ${esc(state.erro)}<br>
+    Verifique se o workflow do n8n está ativo e se o webhook <code>${esc(CONFIG.ENDPOINT)}</code> está respondendo.
+  </div>`;
+}
+
+function vCarregando() {
+  return `<section class="kpis">` + Array.from({ length: 5 }, () => `<div class="kpi">
+      <div class="lbl skel">carregando</div>
+      <div class="num skel" style="width:70%">000</div>
+      <div class="bar"></div><div class="hint skel" style="width:80%">carregando</div>
+    </div>`).join('') + `</section>
+    <div class="card" style="height:280px"></div>`;
+}
+
+/* ── render principal ── */
+function render() {
+  const d = state.dados, v = state.view;
+  let corpo = '';
+
+  if (state.status === 'erro' && !d) {
+    corpo = vErro();
+  } else if (!d) {
+    corpo = vCarregando();
+  } else {
+    if (state.status === 'erro') corpo += vErro();
+    if (v === 'visao') corpo += vKpis();
+
+    const mostraSeg = v === 'visao' || v === 'segmentos';
+    const mostraTri = v === 'visao' || v === 'cronograma';
+    if (mostraSeg || mostraTri) {
+      corpo += `<section class="grid2" style="grid-template-columns:${v === 'visao' ? '1.45fr 1fr' : '1fr'}">`
+        + (mostraSeg ? vSegmentos() : '')
+        + (mostraTri ? vTrilhas() : '')
+        + `</section>`;
+    }
+    if (v === 'responsaveis' || v === 'relatorios') corpo += vEmBreve();
+    if (v === 'visao' || v === 'materiais') corpo += vMateriais();
+  }
+
+  document.getElementById('app').innerHTML = vSidebar() + `<main>
+    ${vHeader()}
+    ${corpo}
+    <footer>
+      <img src="${LOGO_RODAPE}" alt="">
+      <span>Rede Alfa CEM Bilíngue · Coordenação Editorial · dados lidos ao vivo da planilha Fluxo Editorial 2027 via n8n.</span>
+    </footer>
+  </main>`;
+}
+
+/* ── eventos (delegação: o DOM é redesenhado a cada render) ── */
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-view],[data-act]');
+  if (!el) return;
+  if (el.dataset.view) { state.view = el.dataset.view; state.pagina = 0; return render(); }
+  switch (el.dataset.act) {
+    case 'recarregar': return carregar(true);
+    case 'risco': state.somenteRisco = !state.somenteRisco; state.pagina = 0; return render();
+    case 'exportar': return exportarCsv();
+    case 'pag-ant': state.pagina = Math.max(0, state.pagina - 1); return render();
+    case 'pag-prox': state.pagina++; return render();
+    case 'ir-materiais': {
+      state.view = 'materiais'; state.pagina = 0; render();
+      document.getElementById('materiais')?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+  }
+});
+
+document.addEventListener('change', e => {
+  const f = e.target.dataset.f;
+  if (f === 'segmento') { state.filtroSegmento = e.target.value; state.pagina = 0; render(); }
+  if (f === 'trilha') { state.filtroTrilha = e.target.value; state.pagina = 0; render(); }
+});
+
+// Busca sem perder o foco do campo: filtra e redesenha só a tabela.
+document.addEventListener('input', e => {
+  if (e.target.dataset.act !== 'busca') return;
+  state.busca = e.target.value;
+  state.pagina = 0;
+  const alvo = document.getElementById('materiais');
+  if (!alvo) return render();
+  const tmp = document.createElement('div');
+  tmp.innerHTML = vMateriais();
+  alvo.replaceWith(tmp.firstElementChild);
+  const campo = document.querySelector('[data-act="busca"]');
+  if (campo) { campo.focus(); campo.setSelectionRange(campo.value.length, campo.value.length); }
+});
+
+render();
+carregar();
+setInterval(carregar, CONFIG.REFRESH_MS);
+// Volta a sincronizar assim que a aba reganha o foco.
+document.addEventListener('visibilitychange', () => { if (!document.hidden) carregar(); });
+</script>
+</body>
+</html>

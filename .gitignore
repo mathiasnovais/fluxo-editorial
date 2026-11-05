@@ -1,0 +1,31 @@
+# gerado pelo build.js com o ID da planilha e a credencial: nunca versionar
+dist/workflow.json
+
+# segredos e configuração real
+.env
+.env.*
+!.env.exemplo
+!.env.example
+.dev.vars
+segredo*
+config.js
+
+# ferramentas e caches
+node_modules/
+.vscode/
+*.log
+Thumbs.db
+.DS_Store
+
+# backups e arquivos soltos
+*.bak*
+_backup*
+_bak*
+_original/
+*.zip
+
+# dados reais
+*.xlsx
+*.csv
+*.pdf
+*.docx
